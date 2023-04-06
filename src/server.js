@@ -11,6 +11,13 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/user',user);
 // app.use('/link',link);
 
+app.get('*' , (req, res)=>{
+    result.boyd = {}
+    result.status = 404;
+    result.message = 'Page Not Found!'
+    return res.status(result.status).json({body: result.body, message: result.message})
+})
+
 app.listen(PORT,()=>{
     console.log("App listening at port: ", PORT)
 })
