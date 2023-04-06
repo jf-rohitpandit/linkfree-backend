@@ -26,7 +26,34 @@ const login = async (email, password)=>{
     return result;
 }
 
+const signup = async (name, email, password) => {
+  let result = {message: '', body: {}, status: 200};
+  
+  try{
+    let existingUser = await getUserByEmail(email);
+    if(user != null){
+      result.status = 400;
+      result.message = 'Email already taken!';
+      return result;
+    }
+
+    let id = await createUser(name, email, password);
+    let token = '';
+
+    result.status = 201;
+    result.message = 'Signup successful!';
+    result.body = {token};
+  } catch (error) {
+    console.log('error in the signup: ', error);
+    result.status = 500;
+    result.message = 'Internal Error Occured!';
+  }
+
+  return result;
+}
+
 
 module.exports ={
-  login
+  login,
+  signup
 }
