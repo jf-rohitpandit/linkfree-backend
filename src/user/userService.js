@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const userModel = require('./userModel');
 const {getUserByEmail} = require('./userModel');
 
@@ -12,7 +13,7 @@ const login = async (email, password)=>{
         return result;
       }
 
-      let token = ''
+      let token = jwt.sign({'user': user.id}, 'secretText');
 
       result.status = 200;
       result.message = 'Login successful!';
@@ -28,7 +29,7 @@ const login = async (email, password)=>{
 
 const signup = async (name, email, password) => {
   let result = {message: '', body: {}, status: 200};
-  
+
   try{
     let existingUser = await getUserByEmail(email);
     if(user != null){
@@ -38,7 +39,7 @@ const signup = async (name, email, password) => {
     }
 
     let id = await createUser(name, email, password);
-    let token = '';
+    let token = jwt.sign({'user':id}, 'secretText');
 
     result.status = 201;
     result.message = 'Signup successful!';

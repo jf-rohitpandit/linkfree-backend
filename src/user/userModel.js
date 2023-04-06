@@ -1,7 +1,13 @@
 const pool = require('../db')
 
 const getUserByEmail = async (email) => {
-    let query = `select email, password from public.user where email = '${email}'  `;
+    let query = `select id,email, password from public.user where email = '${email}'  `;
+    let res = await pool.query(query);
+    return res.rows[0];
+}
+
+const getUserById = async (id) => {
+    let query = `select id, email from public.user where id = ${id} `;
     let res = await pool.query(query);
     return res.rows[0];
 }
@@ -13,5 +19,7 @@ const createUser = async (name, email, password) =>{
 }
 
 module.exports = {
-    getUserByEmail
+    getUserByEmail,
+    getUserById,
+    createUser
 }
