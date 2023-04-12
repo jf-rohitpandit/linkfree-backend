@@ -1,11 +1,13 @@
 const express = require('express');
-const link = require('./link/linkRouter');
+const cors = require('cors');
+// const link = require('./link/linkRouter');
 const user = require('./user/userRouter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json())
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/user',user);

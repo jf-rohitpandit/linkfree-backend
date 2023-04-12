@@ -1,17 +1,17 @@
 const jwt = require('jsonwebtoken')
 const userModel = require('./userModel');
-const {getUserByEmail} = require('./userModel');
+const {getUserByEmail, createUser} = require('./userModel');
 
 const login = async (email, password)=>{
     let result = {message:'', body: {}, status: 200};
     try {
       let user = await getUserByEmail(email);
-      console.log(user, !user , user.password , password)
       if(!user || user.password != password){
         result.status = 400;
         result.message = 'Bad credentials';  
         return result;
       }
+      console.log(user, !user , user.password , password)
 
       let token = jwt.sign({'user': user.id}, 'secretText');
 
@@ -32,7 +32,7 @@ const signup = async (name, email, password) => {
 
   try{
     let existingUser = await getUserByEmail(email);
-    if(user != null){
+    if(existingUser != null){
       result.status = 400;
       result.message = 'Email already taken!';
       return result;
