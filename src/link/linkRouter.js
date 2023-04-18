@@ -1,23 +1,24 @@
 const express = require('express');
 const {verifyUser} = require('../user/userMiddleware');
 const router = express.Router();
-const {linkShortner, getLinks} = require('./linkService.js')
+const {linkShortner, getLinks, getOriginalUrl} = require('./linkService.js')
 
-router.get('/',verifyUser, async (req, res) =>{
-    let result = {message:'', body: {}, status: 200};
-    
-    result = await getLinks(req.userId);
-    return res.status(result.status).json({body: result.body, message: result.message})
 
-})
-
-router.get('*', async (req, res)=>{
+router.get('*', verifyUser, async (req, res)=>{
     console.log(req.originalUrl)
-    res.send('ok')
-
+    let shortUrl = req.originalUrl;
+    console.log('shorturl: ', shortUrl)
+    let result = null;
+    if(shortUrl == '/' ){
+        result = await getLinks(req.userId);
+    }else{
+        result = await getOriginalUrl(shortUrl)
+    }
+    return res.status(result.status).json({body: result.body, message: result.message})
 })
 
-router.post('/link', async (req, res)=>{
+
+router.post('/', verifyUser, async (req, res)=>{
     console.log('getting here')
     let {link} = req.body;
     let result = {message:'', body: {}, status: 200};
@@ -27,8 +28,10 @@ router.post('/link', async (req, res)=>{
         return res.status(result.status).json({body: result.body, message: result.message})
     }
 
-    result = await linkShortner(link);
+    console.log("request: ", req)
+    result = await linkShortner(link, req.userId);
     return res.status(result.status).json({body: result.body, message: result.message})
 })
+
 
 module.exports = router

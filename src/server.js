@@ -14,6 +14,7 @@ app.use('/user',user);
 app.use('*',link);
 
 app.get('*' , (req, res)=>{
+    console.log("ssss")
     result.boyd = {}
     result.status = 404;
     result.message = 'Page Not Found!'

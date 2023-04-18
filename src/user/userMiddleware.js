@@ -5,15 +5,23 @@ const verifyUser =async (req, res, next) =>{
     try{
         let incomingToken  = req.headers['authorization'];
         console.log('req: ', req.headers)
-        let {user:userId} = jwt.decode(incomingToken,'secretText');
-        console.log("userId: ", userId)
-        let user = await userModel.getUserById(userId);
+        let tokenRes = jwt.decode(incomingToken,'secretText');
+        console.log('tokenREs: ', tokenRes)
+        if(!tokenRes || ! tokenRes.user){
+            req.userEmail = null;
+            req.userId = null;
+            next();
+        }
+        console.log("tokenRes: ", tokenRes)
+        let user = await userModel.getUserById(tokenRes.user);
         if(!user){
-            return res.status(401).json({message: "Unauthorized access"})
+            req.userEmail = null;
+            req.userId = null;
+            next();
         }
         console.log('user: ', user)
         req.userEmail = user.email;
-        req.userId = userId
+        req.userId = tokenRes.user
     } catch (error) {
         console.log('error in the verifyUser: ', error);
         error(next);
