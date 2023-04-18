@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-// const link = require('./link/linkRouter');
+const link = require('./link/linkRouter');
 const user = require('./user/userRouter');
 
 const app = express();
@@ -11,7 +11,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
 app.use('/user',user);
-// app.use('/link',link);
+app.use('*',link);
 
 app.get('*' , (req, res)=>{
     result.boyd = {}
