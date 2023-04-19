@@ -7,7 +7,7 @@ const verifyUser =async (req, res, next) =>{
         console.log('req: ', req.headers)
         let tokenRes = jwt.decode(incomingToken,'secretText');
         console.log('tokenREs: ', tokenRes)
-        if(!tokenRes || ! tokenRes.user){
+        if(!tokenRes || !tokenRes.user){
             req.userEmail = null;
             req.userId = null;
             next();
