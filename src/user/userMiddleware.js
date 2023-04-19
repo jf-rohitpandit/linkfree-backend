@@ -10,14 +10,14 @@ const verifyUser =async (req, res, next) =>{
         if(!tokenRes || !tokenRes.user){
             req.userEmail = null;
             req.userId = null;
-            next();
+            return next();
         }
         console.log("tokenRes: ", tokenRes)
         let user = await userModel.getUserById(tokenRes.user);
         if(!user){
             req.userEmail = null;
             req.userId = null;
-            next();
+            return next();
         }
         console.log('user: ', user)
         req.userEmail = user.email;
